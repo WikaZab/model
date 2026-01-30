@@ -1,5 +1,5 @@
-import React, {useRef, useState} from 'react';
-import { ParamConfig, Model, ParamEditorRef } from '../features/editParams/lib/types';
+import React, { useState} from 'react';
+import { ParamConfig, Model } from '../widgets/paramEditor/lib/types';
 import {ParamEditor} from "../widgets/paramEditor";
 import {Button} from "../shared/ui/Button/Button";
 

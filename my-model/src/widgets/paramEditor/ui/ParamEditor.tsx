@@ -1,5 +1,5 @@
 import React from 'react';
-import { ParamEditorProps } from '../../../features/editParams/lib/types';
+import { ParamEditorProps } from '../lib/types';
 
 export const ParamEditor: React.FC<ParamEditorProps> = ({ params, model, onChange }) => {
     const handleChange = (paramId: number, value: string) => {

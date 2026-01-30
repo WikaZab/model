@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ParamEditor } from './ParamEditor';
-import { ParamConfig, Model } from '../../../features/editParams/lib/types';
+import { ParamConfig, Model } from '../lib/types';
 
 describe('ParamEditor', () => {
     // Тестовые данные
