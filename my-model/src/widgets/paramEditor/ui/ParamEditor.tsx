@@ -1,49 +1,56 @@
-import React, { useImperativeHandle, useCallback } from 'react';
-import { ParamEditorProps, ParamEditorRef, Model, ParamValue } from '../../../features/editParams/lib/types';
-import { useParamEditor } from '../lib/useParamEditor/useParmEditor';
-import { ParamInput } from './ParamInput';
+import React from 'react';
+import { ParamEditorProps } from '../../../features/editParams/lib/types';
 
-export const ParamEditor = React.forwardRef<ParamEditorRef, ParamEditorProps>(
-    ({ params, model, onChange }, ref) => {
-        const {
-            paramValues,
-            handleParamChange,
-            getParamValue,
-        } = useParamEditor(model, onChange);
-
-        const getModel = useCallback((): Model => {
-            const paramValuesArray: ParamValue[] = Array.from(paramValues.entries()).map(
-                ([paramId, value]) => ({ paramId, value })
-            );
-            return { paramValues: paramValuesArray };
-        }, [paramValues]);
-
-        useImperativeHandle(ref, () => ({
-            getModel,
-        }), [getModel]);
-
-        return (
-            <div data-testid="param-editor" style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                    <h2 style={{ margin: 0 }}>Parameter Editor</h2>
-                    <div style={{ background: '#f0f0f0', padding: '4px 12px', borderRadius: '12px', fontSize: '14px' }}>
-                        Parameters: {params.length}
-                    </div>
-                </div>
-
-                <div>
-                    {params.map((param) => (
-                        <ParamInput
-                            key={param.id}
-                            param={param}
-                            value={getParamValue(param.id)}
-                            onChange={(value) => handleParamChange(param.id, value)}
-                        />
-                    ))}
-                </div>
-            </div>
+export const ParamEditor: React.FC<ParamEditorProps> = ({ params, model, onChange }) => {
+    const handleChange = (paramId: number, value: string) => {
+        const updatedValues = model.paramValues.map(item =>
+            item.paramId === paramId ? { ...item, value } : item
         );
-    }
-);
 
-ParamEditor.displayName = 'ParamEditor';
+        onChange({ paramValues: updatedValues });
+    };
+
+    const getValue = (paramId: number) => {
+        return model.paramValues.find(item => item.paramId === paramId)?.value || '';
+    };
+
+    return (
+        <div style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '8px' }}>
+            <h2 style={{ marginTop: 0 }}>Редактор параметров</h2>
+
+            {params.map((param) => {
+                const value = getValue(param.id);
+                const inputId = `param-${param.id}`;
+
+                return (
+                    <div key={param.id} style={{ marginBottom: '15px' }}>
+                        <label
+                            htmlFor={inputId}
+                            style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}
+                        >
+                            {param.name}:
+                        </label>
+
+                        {param.type === 'text' ? (
+                            <textarea
+                                id={inputId}
+                                value={value}
+                                onChange={(e) => handleChange(param.id, e.target.value)}
+                                style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+                                rows={4}
+                            />
+                        ) : (
+                            <input
+                                id={inputId}
+                                type="text"
+                                value={value}
+                                onChange={(e) => handleChange(param.id, e.target.value)}
+                                style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+                            />
+                        )}
+                    </div>
+                );
+            })}
+        </div>
+    );
+};

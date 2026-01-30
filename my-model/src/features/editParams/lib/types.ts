@@ -13,7 +13,7 @@ export interface Model {
     paramValues: ParamValue[];
 }
 
-export interface SelectOption {
+export interface SelectOption { // для селекта
     value: string;
     label: string;
 }
@@ -27,6 +27,8 @@ export interface ParamEditorProps {
     model: Model;
     onChange: (model: Model) => void;
 }
+
+
 
 export interface ParamInputProps {
     param: ParamConfig;
